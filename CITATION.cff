@@ -1,0 +1,58 @@
+cff-version: 1.2.0
+message: "If you use or refer to GCR, please cite it as below. / Pour citer GCR, utilisez la référence ci-dessous."
+title: "GCR — Clés RSA à graine rejouable, pour des certificats africains"
+abstract: "GCR is a pair of preliminary draft standards and their reference code. GCR-0001 fixes how an RSA key is made: its two primes are built from a seed by a public computation (Shawe-Taylor provable primes, FIPS 186-4), so that the same seed gives the same key with any conforming program and the holder can prove where the key comes from. GCR-0002 states how a certification authority using such keys is created, keeps its keys and issues ordinary X.509 certificates. This repository holds both standards (French reference text and English translation), a Python reference implementation, a second JavaScript implementation, test vectors and a reference authority tool."
+type: software
+authors:
+  - family-names: DEMBELE
+    given-names: Honoré
+version: "0.1"
+date-released: "2026-11-18"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.24356091
+    description: "Draft standard GCR-0001, version 0.1 — signed PDF, French reference version and English translation (Zenodo)"
+  - type: doi
+    value: 10.5281/zenodo.24356095
+    description: "Draft standard GCR-0002, version 0.1 — signed PDF, French reference version and English translation (Zenodo)"
+license:
+  - Apache-2.0
+  - CC-BY-4.0
+keywords:
+  - RSA
+  - key generation
+  - provable primes
+  - Shawe-Taylor
+  - certification authority
+  - X.509
+  - public key infrastructure
+  - digital sovereignty
+  - Africa
+  - open standard
+  - OpenTimestamps
+preferred-citation:
+  type: standard
+  title: "GCR-0001 — Génération de clés RSA à graine rejouable"
+  authors:
+    - family-names: DEMBELE
+      given-names: Honoré
+  version: "0.1"
+  doi: 10.5281/zenodo.24356091
+  year: 2026
+  month: 11
+  languages:
+    - fr
+  notes: "Preliminary draft standard, French reference version; English translation in the same record. Standards under CC BY 4.0; reference code under Apache 2.0."
+references:
+  - type: standard
+    title: "GCR-0002 — Autorité de certification à clés rejouables"
+    authors:
+      - family-names: DEMBELE
+        given-names: Honoré
+    version: "0.1"
+    doi: 10.5281/zenodo.24356095
+    year: 2026
+    month: 11
+    languages:
+      - fr
+    notes: "Preliminary draft standard, French reference version; English translation in the same record."

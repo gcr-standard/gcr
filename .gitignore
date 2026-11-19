@@ -1,0 +1,10 @@
+.env
+*.key
+*.pem
+graine.hex
+cles/
+ac/
+__pycache__/
+.pytest_cache/
+.venv/
+.DS_Store
