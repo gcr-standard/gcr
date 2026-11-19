@@ -8,6 +8,8 @@ authors:
     given-names: Honoré
 version: "0.1"
 date-released: "2026-11-18"
+repository-code: "https://github.com/gcr-standard/gcr"
+url: "https://github.com/gcr-standard/gcr"
 identifiers:
   - type: doi
     value: 10.5281/zenodo.24356091
