@@ -13,6 +13,12 @@ RSA does not change. One thing only is fixed: how the key is made.
 | GCR-0001 | RSA key generation from a replayable seed | [English](../normes/GCR-0001.en.md) · [français](../normes/GCR-0001.md) | [10.5281/zenodo.24356091](https://doi.org/10.5281/zenodo.24356091) |
 | GCR-0002 | Certification authority with replayable keys | [English](../normes/GCR-0002.en.md) · [français](../normes/GCR-0002.md) | [10.5281/zenodo.24356095](https://doi.org/10.5281/zenodo.24356095) |
 
+Website: <https://gcr-standard.github.io/gcr/> (overview, and the two programs side by side on the test seeds).
+
+The code of this repository is archived by Software Heritage:
+[`swh:1:snp:2e19b1b9500a23f470109368dbfd8641ec44248b`](https://archive.softwareheritage.org/swh:1:snp:2e19b1b9500a23f470109368dbfd8641ec44248b;origin=https://github.com/gcr-standard/gcr)
+(snapshot of 20 November 2026).
+
 Status: preliminary drafts, version 0.1 of 18 November 2026, open for public comment. No standards body
 has ratified them. The French text is authoritative; this page translates the French
 [README](../README.md).

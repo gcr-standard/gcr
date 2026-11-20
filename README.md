@@ -13,6 +13,12 @@ de bout en bout. RSA ne change pas. Une seule chose est fixée : la manière de 
 | GCR-0001 | Génération de clés RSA à graine rejouable | [français](normes/GCR-0001.md) · [English](normes/GCR-0001.en.md) | [10.5281/zenodo.24356091](https://doi.org/10.5281/zenodo.24356091) |
 | GCR-0002 | Autorité de certification à clés rejouables | [français](normes/GCR-0002.md) · [English](normes/GCR-0002.en.md) | [10.5281/zenodo.24356095](https://doi.org/10.5281/zenodo.24356095) |
 
+Site : <https://gcr-standard.github.io/gcr/fr/> (présentation, et les deux programmes mis côte à côte sur les graines d'épreuve).
+
+Le code de ce dépôt est archivé par Software Heritage :
+[`swh:1:snp:2e19b1b9500a23f470109368dbfd8641ec44248b`](https://archive.softwareheritage.org/swh:1:snp:2e19b1b9500a23f470109368dbfd8641ec44248b;origin=https://github.com/gcr-standard/gcr)
+(instantané du 20 novembre 2026).
+
 Statut : avant-projets, version 0.1 du 18 novembre 2026, soumis à commentaires publics. Aucun organisme
 de normalisation ne les a homologués. Le texte français fait foi.
 
