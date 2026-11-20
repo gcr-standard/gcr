@@ -16,7 +16,7 @@ de bout en bout. RSA ne change pas. Une seule chose est fixée : la manière de 
 Site : <https://gcr-standard.github.io/gcr/fr/> (présentation, et les deux programmes mis côte à côte sur les graines d'épreuve).
 
 Le code de ce dépôt est archivé par Software Heritage :
-[`swh:1:snp:2e19b1b9500a23f470109368dbfd8641ec44248b`](https://archive.softwareheritage.org/swh:1:snp:2e19b1b9500a23f470109368dbfd8641ec44248b;origin=https://github.com/gcr-standard/gcr)
+[`swh:1:snp:8fa9e647a67faf229f5524d946afbf2a69cee625`](https://archive.softwareheritage.org/swh:1:snp:8fa9e647a67faf229f5524d946afbf2a69cee625;origin=https://github.com/gcr-standard/gcr)
 (instantané du 20 novembre 2026).
 
 Statut : avant-projets, version 0.1 du 18 novembre 2026, soumis à commentaires publics. Aucun organisme

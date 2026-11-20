@@ -16,7 +16,7 @@ RSA does not change. One thing only is fixed: how the key is made.
 Website: <https://gcr-standard.github.io/gcr/> (overview, and the two programs side by side on the test seeds).
 
 The code of this repository is archived by Software Heritage:
-[`swh:1:snp:2e19b1b9500a23f470109368dbfd8641ec44248b`](https://archive.softwareheritage.org/swh:1:snp:2e19b1b9500a23f470109368dbfd8641ec44248b;origin=https://github.com/gcr-standard/gcr)
+[`swh:1:snp:8fa9e647a67faf229f5524d946afbf2a69cee625`](https://archive.softwareheritage.org/swh:1:snp:8fa9e647a67faf229f5524d946afbf2a69cee625;origin=https://github.com/gcr-standard/gcr)
 (snapshot of 20 November 2026).
 
 Status: preliminary drafts, version 0.1 of 18 November 2026, open for public comment. No standards body
