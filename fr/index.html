@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; style-src &#x27;sha256-T60XPVN9NYtZNZ01oLpmdPcV1w741gPwZmb2Q8qGxqA=&#x27;; script-src &#x27;sha256-TIO+MsFClk9VaIZwQruq6SOolTzdwnklaxTkl/pu4Ic=&#x27;; font-src &#x27;self&#x27;; img-src &#x27;self&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>GCR — Clés RSA à graine rejouable, pour des certificats africains</title>
+<meta name="description" content="GCR, ce sont deux normes en avant-projet et le code qui les prouve : des clés RSA construites à partir d&#x27;une graine par un calcul public, de sorte que la même graine redonne la même clé sur n&#x27;importe quelle machine, avec n&#x27;importe quel programme écrit d&#x27;après le texte.">
+<link rel="canonical" href="https://gcr-standard.github.io/gcr/fr/">
+<link rel="alternate" hreflang="en" href="https://gcr-standard.github.io/gcr/">
+<link rel="alternate" hreflang="fr" href="https://gcr-standard.github.io/gcr/fr/">
+<link rel="alternate" hreflang="x-default" href="https://gcr-standard.github.io/gcr/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="GCR — Clés RSA à graine rejouable, pour des certificats africains">
+<meta property="og:description" content="GCR, ce sont deux normes en avant-projet et le code qui les prouve : des clés RSA construites à partir d&#x27;une graine par un calcul public, de sorte que la même graine redonne la même clé sur n&#x27;importe quelle machine, avec n&#x27;importe quel programme écrit d&#x27;après le texte.">
+<meta property="og:url" content="https://gcr-standard.github.io/gcr/fr/">
+<meta property="og:image" content="https://gcr-standard.github.io/gcr/assets/apercu.png">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../assets/icone.svg" type="image/svg+xml">
+<link rel="preload" href="../assets/polices/CormorantGaramond.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/polices/Newsreader.woff2" as="font" type="font/woff2" crossorigin>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "name": "GCR — Clés RSA à graine rejouable, pour des certificats africains", "description": "GCR, ce sont deux normes en avant-projet et le code qui les prouve : des clés RSA construites à partir d'une graine par un calcul public, de sorte que la même graine redonne la même clé sur n'importe quelle machine, avec n'importe quel programme écrit d'après le texte.", "inLanguage": "fr", "url": "https://gcr-standard.github.io/gcr/fr/", "author": {"@type": "Person", "name": "Honoré DEMBELE"}, "license": "https://creativecommons.org/licenses/by/4.0/", "codeRepository": "https://github.com/gcr-standard/gcr", "sameAs": ["https://doi.org/10.5281/zenodo.24356091", "https://doi.org/10.5281/zenodo.24356095"]}</script>
+<style>
+@font-face { font-family: "Cormorant Garamond"; src: url("../assets/polices/CormorantGaramond.woff2") format("woff2"); font-weight: 300 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Cormorant Garamond"; src: url("../assets/polices/CormorantGaramond-Italic.woff2") format("woff2"); font-weight: 300 700; font-style: italic; font-display: swap; }
+@font-face { font-family: "Newsreader"; src: url("../assets/polices/Newsreader.woff2") format("woff2"); font-weight: 200 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Newsreader"; src: url("../assets/polices/Newsreader-Italic.woff2") format("woff2"); font-weight: 200 800; font-style: italic; font-display: swap; }
+@font-face { font-family: "Manrope"; src: url("../assets/polices/Manrope.woff2") format("woff2"); font-weight: 200 800; font-style: normal; font-display: swap; }
+
+:root {
+  --ardoise: #E7EBF0;       /* le fond : un registre, gris bleuté */
+  --feuillet: #F6F8FA;      /* la feuille d'épreuve posée dessus */
+  --encre: #151B2B;         /* texte */
+  --encre-douce: #485267;   /* texte secondaire */
+  --laiton: #7E4F06;        /* le métal de la clé : liens, verdict, repères */
+  --laiton-pale: #EADCBF;   /* fond du verdict */
+  --filet: #C2C9D4;         /* traits */
+  --alerte: #9B1C1C;        /* divergence : ne doit jamais se voir */
+  --titre: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --corps: "Newsreader", Georgia, "Times New Roman", serif;
+  --outil: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
+  --chiffres: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { margin: 0; background: var(--ardoise); color: var(--encre); font: 400 1.1875rem/1.55 var(--corps); }
+a { color: var(--laiton); text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--laiton); outline-offset: 3px; }
+.page { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
+
+.entete { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.75rem; padding: 1.25rem 0; border-bottom: 1px solid var(--filet); font: 600 0.8125rem/1.3 var(--outil); }
+.marque { font: 600 1.75rem/1 var(--titre); letter-spacing: 0.04em; color: var(--encre); text-decoration: none; margin-right: auto; }
+.entete nav { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; }
+.entete nav a, .langue { color: var(--encre-douce); text-decoration: none; }
+.entete nav a:hover, .langue:hover { color: var(--encre); text-decoration: underline; }
+.langue { border: 1px solid var(--filet); padding: 0.3rem 0.7rem; border-radius: 2px; }
+
+.ouverture { padding: 4rem 0 2.5rem; }
+h1 { font: 500 clamp(2.4rem, 6.2vw, 4.75rem)/1.02 var(--titre); letter-spacing: -0.012em; margin: 0 0 1.5rem; max-width: 17ch; text-wrap: balance; }
+.accroche { max-width: 38rem; margin: 0 0 2rem; font-size: 1.3125rem; line-height: 1.5; color: var(--encre-douce); }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.75rem; font: 600 0.9375rem/1 var(--outil); }
+.bouton { display: inline-block; background: var(--encre); color: var(--feuillet); text-decoration: none; padding: 0.95rem 1.4rem; border-radius: 2px; }
+.bouton:hover { background: var(--laiton); }
+
+.epreuve { background: var(--feuillet); border: 1px solid var(--filet); border-top: 3px solid var(--encre); margin: 0 0 4.5rem; padding: 1.5rem 1.5rem 1.25rem; }
+.epreuve h2 { font: 500 clamp(1.5rem, 2.6vw, 2rem)/1.15 var(--titre); margin: 0; }
+.epreuve-tete { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; margin-bottom: 1.5rem; }
+.tailles { display: flex; flex-wrap: wrap; gap: 0.5rem; border: 0; margin: 0; padding: 0; }
+.tailles legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+button { font: 600 0.875rem/1 var(--outil); color: var(--encre); background: transparent; border: 1px solid var(--filet); border-radius: 2px; padding: 0.6rem 0.9rem; cursor: pointer; }
+button:hover { border-color: var(--encre); }
+button[aria-pressed="true"] { background: var(--encre); border-color: var(--encre); color: var(--feuillet); }
+button:disabled { cursor: progress; opacity: 0.55; }
+.etiquette { font: 600 0.8125rem/1.3 var(--outil); color: var(--encre-douce); margin: 0 0 0.4rem; }
+.etiquette small { font-weight: 400; font-size: inherit; }
+.hex { font: 400 0.8125rem/1.7 var(--chiffres); overflow-wrap: anywhere; margin: 0; }
+.graine { padding-bottom: 1.25rem; border-bottom: 1px solid var(--filet); }
+.graine .hex { color: var(--laiton); font-size: 0.9375rem; }
+.colonnes { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2.5rem; padding: 1.25rem 0; }
+.colonne + .colonne { border-left: 1px solid var(--filet); padding-left: 2.5rem; }
+.colonne .etiquette { min-height: 2.6em; }  /* les deux modules partent de la même ligne, même si une étiquette prend deux lignes */
+.groupes { display: flex; flex-wrap: wrap; gap: 0 0.75rem; }
+.groupes span { opacity: 0.12; transition: opacity 140ms ease-out; }
+.groupes span.vu { opacity: 1; }
+.groupes .milieu { flex-basis: 100%; font: 400 0.8125rem/2.2 var(--outil); color: var(--encre-douce); }
+.verdict { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1.25rem; background: var(--laiton-pale); padding: 0.9rem 1.1rem; }
+.verdict strong { font: 600 1.375rem/1.2 var(--titre); color: var(--laiton); }
+.verdict[data-etat="divergence"] { background: #F6DCDC; }
+.verdict[data-etat="divergence"] strong { color: var(--alerte); }
+.verdict .hex { flex: 1 1 22rem; color: var(--encre); }
+.verdict .hex b { font: 600 0.8125rem/1 var(--outil); color: var(--encre-douce); margin-right: 0.6rem; }
+.epreuve-pied { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; margin-top: 1.1rem; }
+.epreuve-pied p { flex: 1 1 24rem; margin: 0; font-size: 0.9375rem; line-height: 1.5; color: var(--encre-douce); }
+#rejouer { display: inline-flex; align-items: center; gap: 0.55rem; }
+#rejouer::before { content: ""; width: 0.8rem; height: 0.8rem; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; display: none; }
+#rejouer.en-cours::before { display: block; animation: tourne 700ms linear infinite; }
+@keyframes tourne { to { transform: rotate(360deg); } }
+.annonce { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+.partie { display: grid; grid-template-columns: minmax(0, 17rem) minmax(0, 40rem); gap: 1rem 4rem; padding: 3rem 0; border-top: 1px solid var(--filet); scroll-margin-top: 1rem; }
+.partie h2 { font: 500 clamp(1.7rem, 3vw, 2.4rem)/1.1 var(--titre); margin: 0; text-wrap: balance; }
+.partie p { margin: 0 0 1.1rem; }
+.but { font: italic 400 1.4375rem/1.45 var(--corps); color: var(--encre); margin-bottom: 1.6rem; }
+.liste { list-style: none; margin: 0; padding: 0; }
+.liste li { padding: 0.85rem 0 0.85rem 1.1rem; border-left: 2px solid var(--laiton); margin-bottom: 0.9rem; }
+.liste strong { font-weight: 600; }
+.statut { font-size: 1rem; color: var(--encre-douce); }
+.cadre-table { overflow-x: auto; margin-bottom: 1.25rem; }
+table { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: 1rem; line-height: 1.4; }
+th { font: 600 0.8125rem/1.3 var(--outil); color: var(--encre-douce); text-align: left; padding: 0 1rem 0.6rem 0; border-bottom: 1px solid var(--encre); }
+td { padding: 0.85rem 1rem 0.85rem 0; border-bottom: 1px solid var(--filet); vertical-align: top; }
+td:first-child { font: 600 1.25rem/1.2 var(--titre); white-space: nowrap; }
+.commande { margin: 0 0 1.4rem; }
+.commande pre { margin: 0.35rem 0 0; padding: 0.8rem 1rem; background: var(--encre); color: #E7EBF0; font: 400 0.8125rem/1.6 var(--chiffres); overflow-x: auto; border-radius: 2px; }
+
+.pied { border-top: 3px solid var(--encre); padding: 2rem 0 3.5rem; font-size: 0.9375rem; line-height: 1.55; color: var(--encre-douce); display: grid; gap: 0.6rem; }
+.pied p { margin: 0; max-width: 46rem; }
+.pied .hex { font-size: 0.75rem; }
+
+@media (max-width: 52rem) {
+  .ouverture { padding: 2.5rem 0 2rem; }
+  .colonnes { grid-template-columns: 1fr; }
+  .colonne + .colonne { border-left: 0; border-top: 1px solid var(--filet); padding: 1.25rem 0 0; margin-top: 1.25rem; }
+  .partie { grid-template-columns: minmax(0, 1fr); padding: 2.25rem 0; }
+  .epreuve { padding: 1.1rem 1rem 1rem; margin-bottom: 3rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .groupes span { transition: none; }
+  #rejouer.en-cours::before { animation: none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="entete">
+  <a class="marque" href="./">GCR</a>
+  <nav aria-label="Rubriques">
+    <a href="#idee">L&#x27;idée</a>
+    <a href="#preuves">Ce qui est vérifié</a>
+    <a href="#normes">Les normes</a>
+    <a href="#limites">Limites</a>
+  </nav>
+  <a class="langue" href="../" hreflang="en" lang="en" title="Read this page in English">English</a>
+</header>
+
+<main>
+<section class="ouverture">
+  <h1>Clés RSA à graine rejouable, pour des certificats africains</h1>
+  <p class="accroche">Deux normes, en avant-projet, et le code qui les prouve. RSA ne change pas. Une seule chose est fixée : la manière de fabriquer la clé.</p>
+  <p class="actions"><a class="bouton" href="https://github.com/gcr-standard/gcr/blob/main/normes/GCR-0001.md">Lire GCR-0001</a> <a href="https://github.com/gcr-standard/gcr">Voir le code</a></p>
+</section>
+
+<section class="epreuve" id="epreuve" aria-labelledby="epreuve-titre">
+  <div class="epreuve-tete">
+    <h2 id="epreuve-titre">Une graine, deux programmes, une seule clé</h2>
+    <fieldset class="tailles"><legend>Choisir une taille de clé</legend><button type="button" aria-pressed="true">2048 bits</button><button type="button" aria-pressed="false">3072 bits</button><button type="button" aria-pressed="false">4096 bits</button></fieldset>
+  </div>
+  <div class="graine">
+    <p class="etiquette">Graine</p>
+    <p class="hex" id="graine">5ce2a145eaa3cbf4dec898ce6b08707c74ab5e7919b2dde70f896ac534da0346</p>
+  </div>
+  <div class="colonnes">
+    <div class="colonne">
+      <p class="etiquette">Référence, en Python · Module n</p>
+      <p class="hex groupes" id="col-a"><span class="vu">c4a20329</span><span class="vu">162b78ce</span><span class="vu">29f1992c</span><span class="vu">6adc4265</span><span class="vu">aa641355</span><span class="vu">fd56743f</span><span class="vu">5b06737c</span><span class="vu">dfd8febd</span><span class="vu">d94a3c19</span><span class="vu">c5ce9257</span><span class="vu">c8d9acab</span><span class="vu">6ba5e781</span><span class="vu">52583f6b</span><span class="vu">414e499f</span><span class="vu">c70fbd01</span><span class="vu">43a7c7d8</span><span class="vu">a2cca175</span><span class="vu">7089d2a7</span><span class="vu">d697ad67</span><span class="vu">4fb0257f</span><span class="vu">7c721f25</span><span class="vu">5fb0aea4</span><span class="vu">4f075428</span><span class="vu">760518b5</span><span class="milieu vu">… 512 chiffres hexadécimaux …</span><span class="vu">34215594</span><span class="vu">4b17fa08</span><span class="vu">71c2f53c</span><span class="vu">390e7c32</span><span class="vu">9a299eb0</span><span class="vu">2d2d2fcf</span><span class="vu">6b00cb6f</span><span class="vu">a1832a35</span></p>
+    </div>
+    <div class="colonne">
+      <p class="etiquette">Second programme, en JavaScript · Module n <small>(écrit d&#x27;après le seul texte de la norme)</small></p>
+      <p class="hex groupes" id="col-b"><span class="vu">c4a20329</span><span class="vu">162b78ce</span><span class="vu">29f1992c</span><span class="vu">6adc4265</span><span class="vu">aa641355</span><span class="vu">fd56743f</span><span class="vu">5b06737c</span><span class="vu">dfd8febd</span><span class="vu">d94a3c19</span><span class="vu">c5ce9257</span><span class="vu">c8d9acab</span><span class="vu">6ba5e781</span><span class="vu">52583f6b</span><span class="vu">414e499f</span><span class="vu">c70fbd01</span><span class="vu">43a7c7d8</span><span class="vu">a2cca175</span><span class="vu">7089d2a7</span><span class="vu">d697ad67</span><span class="vu">4fb0257f</span><span class="vu">7c721f25</span><span class="vu">5fb0aea4</span><span class="vu">4f075428</span><span class="vu">760518b5</span><span class="milieu vu">… 512 chiffres hexadécimaux …</span><span class="vu">34215594</span><span class="vu">4b17fa08</span><span class="vu">71c2f53c</span><span class="vu">390e7c32</span><span class="vu">9a299eb0</span><span class="vu">2d2d2fcf</span><span class="vu">6b00cb6f</span><span class="vu">a1832a35</span></p>
+    </div>
+  </div>
+  <div class="verdict" id="verdict" data-etat="concorde">
+    <strong id="verdict-mot">Même clé</strong>
+    <p class="hex"><b>SHA-256 de n</b><span id="empreinte">26aeccccaeb4f45175bf4d940921f616414d530cc12f53b45d2acdfefb0dacbb</span></p>
+  </div>
+  <div class="epreuve-pied">
+    <button type="button" id="rejouer">Rejouer</button>
+    <p>Ce sont les graines d&#x27;épreuve publiées à l&#x27;annexe A.3 de GCR-0001, recalculées par les deux programmes à la construction de cette page. Elles sont publiques, donc ces clés ne protègent rien : une vraie graine vaut la clé privée.</p>
+  </div>
+  <p class="annonce" id="annonce" role="status" aria-live="polite"></p>
+</section>
+
+<section class="partie" id="idee">
+  <h2>La même graine redonne la même clé</h2>
+  <div><p class="but">Le but : que des autorités de certification africaines délivrent des certificats X.509 ordinaires, qui servent à tout et sont lus par tout logiciel, mais dont les clés sortent d&#x27;un générateur maîtrisé de bout en bout.</p><p>Les deux nombres premiers d&#x27;une clé RSA sont construits à partir d&#x27;une graine, par un calcul public entièrement décrit. La même graine redonne la même clé, sur n&#x27;importe quelle machine, avec n&#x27;importe quel programme écrit d&#x27;après le texte.</p><p>Celui qui détient une clé peut donc prouver qu&#x27;elle sort de ce calcul et de rien d&#x27;autre : il la refait ailleurs et compare. Un générateur défectueux ou malveillant ne passe pas cette épreuve.</p><p>Le calcul n&#x27;est pas nouveau : c&#x27;est la construction des premiers prouvables de Shawe-Taylor, publiée dans FIPS 186-4. La norme la rend obligatoire, la décrit sans renvoi, y joint une fiche de génération et définit les contrôles de conformité.</p></div>
+</section>
+
+<section class="partie" id="preuves">
+  <h2>Ce que les épreuves vérifient</h2>
+  <ul class="liste"><li>Le générateur retrouve les trois cas officiels du NIST (ACVP, RSA KeyGen FIPS 186-4, méthode B.3.2).</li><li>Les deux implémentations donnent les mêmes clés en 2048, 3072 et 4096 bits.</li><li>OpenSSL reconnaît les clés, signe et vérifie avec elles.</li><li>Une chaîne racine → autorité délivrante → certificat passe les douze contrôles et la vérification stricte d&#x27;OpenSSL, et dix chaînes fautives sont chacune arrêtées par le contrôle attendu.</li></ul>
+</section>
+
+<section class="partie" id="normes">
+  <h2>Deux normes, soumises à commentaires</h2>
+  <div>
+    <div class="cadre-table"><table>
+      <thead><tr><th scope="col">Norme</th><th scope="col">Objet</th><th scope="col">Texte</th><th scope="col">Archive</th></tr></thead>
+      <tbody><tr><td>GCR-0001</td><td>Génération de clés RSA à graine rejouable</td><td><a href="https://github.com/gcr-standard/gcr/blob/main/normes/GCR-0001.md">français</a> · <a href="https://github.com/gcr-standard/gcr/blob/main/normes/GCR-0001.en.md">English</a></td><td><a href="https://doi.org/10.5281/zenodo.24356091">10.5281/zenodo.24356091</a></td></tr><tr><td>GCR-0002</td><td>Autorité de certification à clés rejouables</td><td><a href="https://github.com/gcr-standard/gcr/blob/main/normes/GCR-0002.md">français</a> · <a href="https://github.com/gcr-standard/gcr/blob/main/normes/GCR-0002.en.md">English</a></td><td><a href="https://doi.org/10.5281/zenodo.24356095">10.5281/zenodo.24356095</a></td></tr></tbody>
+    </table></div>
+    <p class="statut">Avant-projets, version 0.1 du 18 novembre 2026, soumis à commentaires publics. Aucun organisme de normalisation ne les a homologués. Le texte français fait foi.</p>
+  </div>
+</section>
+
+<section class="partie" id="essayer">
+  <h2>Essayer</h2>
+  <div><div class="commande">Générer une clé de 3072 bits<pre><code>python3 rsagraine.py generer --bits 3072 --sortie cles/</code></pre></div><div class="commande">Vérifier que la graine redonne bien la clé de la fiche<pre><code>python3 rsagraine.py verifier --graine cles/graine.hex --fiche cles/fiche.json</code></pre></div><div class="commande">Faire rejouer les vecteurs par la seconde implémentation<pre><code>node independant/gcr.js</code></pre></div><p class="statut">Trois fichiers sont écrits : la clé privée, la graine et la fiche publique. La graine vaut la clé privée.</p></div>
+</section>
+
+<section class="partie" id="limites">
+  <h2>Ce que cela ne fait pas</h2>
+  <ul class="liste"><li><strong>La graine vaut la clé privée.</strong> Le rejeu se fait par le détenteur ou son auditeur, pas en public.</li><li><strong>L&#x27;implémentation de référence n&#x27;est pas en temps constant.</strong> Elle sert à produire et à contrôler des clés sur une machine tenue, pas sur une machine qu&#x27;un adversaire observe.</li><li><strong>La qualité de la graine reste celle de l&#x27;aléa du système.</strong> Une graine faible donne une clé faible.</li><li><strong>L&#x27;outil d&#x27;autorité ne produit pas encore</strong> les listes de révocation ni le registre que GCR-0002 exige, et ne délivre que des certificats de serveur.</li><li><strong>RSA n&#x27;est pas éternel.</strong> Un ordinateur quantique assez grand le casse ; les calendriers officiels prévoient son retrait dans la décennie 2030.</li><li><strong>Lu par tous ne veut pas dire reconnu par tous.</strong> Pour qu&#x27;un certificat soit tenu de confiance sans réglage, sa racine doit figurer dans les magasins de confiance des systèmes et des navigateurs.</li></ul>
+</section>
+
+<section class="partie" id="commenter">
+  <h2>Commenter</h2>
+  <div><p>Les deux textes sont soumis à commentaires publics. Une observation, une objection, un défaut : ouvrez un ticket dans le dépôt.</p><p class="actions"><a class="bouton" href="https://github.com/gcr-standard/gcr/issues">Ouvrir un ticket</a></p></div>
+</section>
+</main>
+
+<footer class="pied">
+  <p>Auteur et mainteneur : Honoré DEMBELE · <a href="https://github.com/gcr-standard/gcr">github.com/gcr-standard/gcr</a></p>
+  <p>Les normes sont sous licence Creative Commons Attribution 4.0 International. Le code est sous licence Apache 2.0. Les vecteurs du NIST gardent leur statut propre.</p>
+  <p>Code archivé par Software Heritage : <a class="hex" href="https://archive.softwareheritage.org/swh:1:snp:2e19b1b9500a23f470109368dbfd8641ec44248b;origin=https://github.com/gcr-standard/gcr">swh:1:snp:2e19b1b9500a23f470109368dbfd8641ec44248b</a></p>
+</footer>
+</div>
+<script>
+(function () {
+  "use strict";
+  var CAS = [{"graine": "5ce2a145eaa3cbf4dec898ce6b08707c74ab5e7919b2dde70f896ac534da0346", "a": "c4a20329162b78ce29f1992c6adc4265aa641355fd56743f5b06737cdfd8febdd94a3c19c5ce9257c8d9acab6ba5e78152583f6b414e499fc70fbd0143a7c7d8a2cca1757089d2a7d697ad674fb0257f7c721f255fb0aea44f075428760518b5a7bfbf8461ec5865a2f897050b73fdabf92c11f00c958612938330db0a817325ceb3dccb4395ce5219e9ac72c88b069b19a7baf2b8754cb94ce04dc24d80b5736a67b584eb93c8c4605934fca282acad801c77110aaa47eb3efb42b1617b8a5c8c9d2d2fb11098de3c4609f0c456549e5aeaca7dc896f83b722bd5f9fbae176c342155944b17fa0871c2f53c390e7c329a299eb02d2d2fcf6b00cb6fa1832a35", "b": "c4a20329162b78ce29f1992c6adc4265aa641355fd56743f5b06737cdfd8febdd94a3c19c5ce9257c8d9acab6ba5e78152583f6b414e499fc70fbd0143a7c7d8a2cca1757089d2a7d697ad674fb0257f7c721f255fb0aea44f075428760518b5a7bfbf8461ec5865a2f897050b73fdabf92c11f00c958612938330db0a817325ceb3dccb4395ce5219e9ac72c88b069b19a7baf2b8754cb94ce04dc24d80b5736a67b584eb93c8c4605934fca282acad801c77110aaa47eb3efb42b1617b8a5c8c9d2d2fb11098de3c4609f0c456549e5aeaca7dc896f83b722bd5f9fbae176c342155944b17fa0871c2f53c390e7c329a299eb02d2d2fcf6b00cb6fa1832a35", "empreinte": "26aeccccaeb4f45175bf4d940921f616414d530cc12f53b45d2acdfefb0dacbb"}, {"graine": "f297cd753091cc22eb939848594d1fd46f27858fe2362865101aba37b5608ace", "a": "a48171a75ea970870e8b6ba215555daf82b70ecef08462cb3e2ccad5374dc83eec92866f764f300c8b5c3074e36f4501f6bef12d48ccae1f8d2bbbc1d73cd0efbb22d4cafc02e568b1c52e4bc4d5f4e9b308b3d82081ff7920e2f64f49d37f8f6d0c2d6bb4d155f0d7488848a11386ec6e3e7f162755512527e60d1ad6f890d7d0f413f36fb14550ccb4d77275e7bc2d9fe473293c7153ac70264874ff7eec4f7e395b40522fdc70b63ae417da061e790633e85e361f2d5c9fd4d77b5df981418f1f46cc9b2389f8b34c0de7838f801833c9af42af20146f726c77233c92b1236270e7170e8849cd32c56418c8724f3f8408979dff563aa3d9a6de70245d3b55462ad3c920dc9e782a2d78ca637e2606a9f903ecca68a8cc46785acb815566be6d8ff9fe2732891a34c7a74711bb4ad70fb67179f3a34bd94b87903766e854e3fae24848e7b953366d642a8bc69f6b4d84dccd7e069632276adb658cd4c75b0fd6c0da01ed7b1f04ee971ea18c0902ef7a015c9f8ba9a4223c5bf97a5ae3a8d5", "b": "a48171a75ea970870e8b6ba215555daf82b70ecef08462cb3e2ccad5374dc83eec92866f764f300c8b5c3074e36f4501f6bef12d48ccae1f8d2bbbc1d73cd0efbb22d4cafc02e568b1c52e4bc4d5f4e9b308b3d82081ff7920e2f64f49d37f8f6d0c2d6bb4d155f0d7488848a11386ec6e3e7f162755512527e60d1ad6f890d7d0f413f36fb14550ccb4d77275e7bc2d9fe473293c7153ac70264874ff7eec4f7e395b40522fdc70b63ae417da061e790633e85e361f2d5c9fd4d77b5df981418f1f46cc9b2389f8b34c0de7838f801833c9af42af20146f726c77233c92b1236270e7170e8849cd32c56418c8724f3f8408979dff563aa3d9a6de70245d3b55462ad3c920dc9e782a2d78ca637e2606a9f903ecca68a8cc46785acb815566be6d8ff9fe2732891a34c7a74711bb4ad70fb67179f3a34bd94b87903766e854e3fae24848e7b953366d642a8bc69f6b4d84dccd7e069632276adb658cd4c75b0fd6c0da01ed7b1f04ee971ea18c0902ef7a015c9f8ba9a4223c5bf97a5ae3a8d5", "empreinte": "493087d951d2b3b6deacba7b9a9598b85bb3dcfaff0090fdcbef978ecfe4e4ca"}, {"graine": "6269e17f3cbeb624806f150d06bd62074aef2ddd4344cda506799865b6b71801", "a": "ea56f03fba81fbf7e51513d7aa962d4aab2f00991f47c32415343cbe5d073ab7f83c4cff9f34b148365879cfe33e71e00bf4e0e86867a228429d43648816a2f2b8c1659339444fe36c84aefa9945dc1927227fc2ba2bd1dd2e583712051ae97e2d2bbf9b8bbbf00ad6e963b1ee920a16ebd5409efee6d8e4ef243d03904d4606e0466f8eeecc99eb108c9de0e1f0c9b99755f5aa4ca3df83d5e86d665b061b6f720913432321db488eaea45578289a8b95707786f63be3b8473131cf8654cc418356ea82167d07b6df9a1b4058160b16d56e18de8f99cd73dc2c83829d0a5aad44e209a5e6a1cb35019ac41693b2a148931f44f4c402ec5489b891c15f7f61c1a53b9ac1623f568189c3bd2ae7c7acb78fff289afbb1a110a61491b84019ce55f7a87792e8b4edb2b8440d83081e002743b4093e0e6f20e637467bc0f79ab0b53ebb2f878ace5cdd91195202efe9355358fb62cefe1374244f5f00e250c266633892dffaea24b3946adff9f09a3668124ec2d881f59e93896a88b5e2a2215277e79a32c85b58ca183409f691941fd949df3e8cd8569e8f910c44a03e471909ce942ac3ab7f9cdd542c9b3ec4f1452eb9dd98e6089e8def47bc6152a9af706e0ab6cea7c869e23149b6e7683526c7826da37f5df3ab7ac3fe56b0d5d43e7ac2ec90cb28758927e5b009f1a99d47554f53d3803a6fd943cba9c1ca8192e0ecf3f3", "b": "ea56f03fba81fbf7e51513d7aa962d4aab2f00991f47c32415343cbe5d073ab7f83c4cff9f34b148365879cfe33e71e00bf4e0e86867a228429d43648816a2f2b8c1659339444fe36c84aefa9945dc1927227fc2ba2bd1dd2e583712051ae97e2d2bbf9b8bbbf00ad6e963b1ee920a16ebd5409efee6d8e4ef243d03904d4606e0466f8eeecc99eb108c9de0e1f0c9b99755f5aa4ca3df83d5e86d665b061b6f720913432321db488eaea45578289a8b95707786f63be3b8473131cf8654cc418356ea82167d07b6df9a1b4058160b16d56e18de8f99cd73dc2c83829d0a5aad44e209a5e6a1cb35019ac41693b2a148931f44f4c402ec5489b891c15f7f61c1a53b9ac1623f568189c3bd2ae7c7acb78fff289afbb1a110a61491b84019ce55f7a87792e8b4edb2b8440d83081e002743b4093e0e6f20e637467bc0f79ab0b53ebb2f878ace5cdd91195202efe9355358fb62cefe1374244f5f00e250c266633892dffaea24b3946adff9f09a3668124ec2d881f59e93896a88b5e2a2215277e79a32c85b58ca183409f691941fd949df3e8cd8569e8f910c44a03e471909ce942ac3ab7f9cdd542c9b3ec4f1452eb9dd98e6089e8def47bc6152a9af706e0ab6cea7c869e23149b6e7683526c7826da37f5df3ab7ac3fe56b0d5d43e7ac2ec90cb28758927e5b009f1a99d47554f53d3803a6fd943cba9c1ca8192e0ecf3f3", "empreinte": "8578abf084ec2b01f6f2b25269e53c3070a9f29d48077f7eb143ce3ffaa8ecc4"}];
+  var MOTS = {"chiffres": "{n} chiffres hexadécimaux", "rejoue": "Rejoué : les deux colonnes sont égales, chiffre pour chiffre.", "verdict": "Même clé", "divergence": "Les deux programmes divergent"};
+  var DEBUT = 24, FIN = 8, PAS_MS = 16;
+  var colA = document.getElementById("col-a"), colB = document.getElementById("col-b");
+  var rejouer = document.getElementById("rejouer");
+  var tailles = Array.prototype.slice.call(document.querySelectorAll(".tailles button"));
+  var calme = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var choisi = 0, occupe = false;
+
+  function decouper(hex) {
+    var g = [];
+    for (var i = 0; i < hex.length; i += 8) { g.push(hex.slice(i, i + 8)); }
+    return g;
+  }
+
+  function poser(colonne, hex) {
+    var g = decouper(hex), montres = [];
+    colonne.textContent = "";
+    g.forEach(function (bloc, i) {
+      if (i === DEBUT && g.length > DEBUT + FIN) {
+        var milieu = document.createElement("span");
+        milieu.className = "milieu vu";
+        milieu.textContent = "… " + MOTS.chiffres.replace("{n}", String(hex.length)) + " …";
+        colonne.appendChild(milieu);
+      }
+      if (i < DEBUT || i >= g.length - FIN) {
+        var s = document.createElement("span");
+        s.textContent = bloc;
+        colonne.appendChild(s);
+        montres.push(s);
+      }
+    });
+    return montres;
+  }
+
+  function empreinte(hex) {
+    if (!(window.crypto && window.crypto.subtle)) { return Promise.resolve(null); }
+    var pair = hex.length % 2 ? "0" + hex : hex, octets = new Uint8Array(pair.length / 2);
+    for (var i = 0; i < octets.length; i++) { octets[i] = parseInt(pair.substr(i * 2, 2), 16); }
+    return window.crypto.subtle.digest("SHA-256", octets).then(function (r) {
+      return Array.prototype.map.call(new Uint8Array(r), function (o) { return ("0" + o.toString(16)).slice(-2); }).join("");
+    }).catch(function () { return null; });
+  }
+
+  function conclure(cas) {
+    var egales = cas.a === cas.b;
+    Promise.all([empreinte(cas.a), empreinte(cas.b)]).then(function (e) {
+      var memes = egales && e[0] === e[1];
+      document.getElementById("verdict").dataset.etat = memes ? "concorde" : "divergence";
+      document.getElementById("verdict-mot").textContent = memes ? MOTS.verdict : MOTS.divergence;
+      document.getElementById("empreinte").textContent = e[0] || cas.empreinte;
+      document.getElementById("annonce").textContent = memes ? MOTS.rejoue : MOTS.divergence;
+      occupe = false;
+      rejouer.classList.remove("en-cours");
+      [rejouer].concat(tailles).forEach(function (b) { b.disabled = false; });
+    });
+  }
+
+  function jouer(i) {
+    if (occupe) { return; }
+    occupe = true;
+    choisi = i;
+    var cas = CAS[i];
+    [rejouer].concat(tailles).forEach(function (b) { b.disabled = true; });
+    rejouer.classList.add("en-cours");
+    tailles.forEach(function (b, k) { b.setAttribute("aria-pressed", k === i ? "true" : "false"); });
+    document.getElementById("graine").textContent = cas.graine;
+    document.getElementById("annonce").textContent = "";
+    var a = poser(colA, cas.a), b = poser(colB, cas.b), n = Math.max(a.length, b.length), k = 0;
+    if (calme) {
+      a.concat(b).forEach(function (s) { s.className = "vu"; });
+      conclure(cas);
+      return;
+    }
+    var horloge = window.setInterval(function () {
+      if (a[k]) { a[k].className = "vu"; }
+      if (b[k]) { b[k].className = "vu"; }
+      k += 1;
+      if (k >= n) { window.clearInterval(horloge); conclure(cas); }
+    }, PAS_MS);
+  }
+
+  tailles.forEach(function (b, i) { b.addEventListener("click", function () { jouer(i); }); });
+  rejouer.addEventListener("click", function () { jouer(choisi); });
+  jouer(0);
+})();
+</script>
+</body>
+</html>
